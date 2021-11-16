@@ -1,0 +1,113 @@
+from datetime import datetime
+
+import peewee
+from peewee_moves import DatabaseManager
+
+db = peewee.SqliteDatabase('database.db')
+# db = peewee.SqliteDatabase(':memory:')
+
+migrator = DatabaseManager(db)
+
+
+class BaseModel(peewee.Model):
+    class Meta:
+        database = db
+
+
+class User(BaseModel):
+    username = peewee.CharField(
+        max_length=255,
+        index=True,
+        null=True,
+    )
+    password = peewee.CharField(
+        max_length=255,
+        null=True,
+    )
+    email = peewee.CharField(
+        max_length=255,
+    )
+
+    def __str__(self):
+        return self.username
+
+
+class Channel(BaseModel):
+    name = peewee.CharField(
+        index=True,
+        max_length=255,
+        )
+    slug = peewee.CharField()
+
+    def __str__(self):
+        return self.name
+
+
+class Thread(BaseModel):
+    title = peewee.CharField(
+        max_length=255,
+        index=True,
+        null=False,
+    )
+    body = peewee.TextField(null=False,)
+    created_at = peewee.DateTimeField(
+        default=datetime.now,
+    )
+    user = peewee.ForeignKeyField(
+        User,
+        backref='threads',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+        null=False,
+    )
+    channel = peewee.ForeignKeyField(
+        Channel,
+        backref='threads',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+        null=False,
+        )
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def path(self):
+        return f'/threads/{self.channel.slug}/{self.id}'
+
+    @property
+    def creator(self):
+        return self.user.id
+
+    def add_reply(self, reply: dict):
+        return Reply.create(
+            thread=self.id,
+            user=reply.get('user'),
+            body=reply.get('body'),
+            )
+
+
+class Reply(BaseModel):
+    body = peewee.TextField()
+    created_at = peewee.DateTimeField(
+        default=datetime.now,
+    )
+    user = peewee.ForeignKeyField(
+        User,
+        backref='replies',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+    )
+    thread = peewee.ForeignKeyField(
+        Thread,
+        backref='replies',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+    )
+
+    def __str__(self):
+        return self.body[:10]
+
+    @property
+    def owner(self):
+        return self.user.id

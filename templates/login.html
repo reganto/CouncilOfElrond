@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h4>Login</h4>
+<form class="m-10" action="{{ reverse_url('login') }}" method="POST" id="myform">
+  {% module xsrf_form_html() %}
+  <input type="text" class="form-control" name="username" required="required" onfocus="foo()" />
+  <input type="submit" value="login" class="btn btn-primary mt-4" />
+</form>
+<script>
+  function foo() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const next = urlParams.get('next');
+    if(next) {
+      myform = document.getElementById('myform');
+      input_element = document.createElement('input');
+      input_element.setAttribute('type', 'hidden');
+      input_element.setAttribute('name', 'next');
+      input_element.setAttribute('value', next);
+      myform.appendChild(input_element)
+    }
+  }
+</script>
+{% end %}

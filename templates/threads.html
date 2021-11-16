@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 m-5">
+                <h1 class="mb-5">Forum Threads</h1>
+                {% for thread in threads %}
+                <article>
+                    <h4>
+                        <a href="{{ reverse_url('show-thread', thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
+                    </h4>
+                    <p>
+                        <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
+                        <a href="#">{{ thread.user.username }}</a>
+                    </p>
+                    <p>
+                        {{ thread.body }}
+                    </p>
+                </article>
+                <hr>
+                {% end %}
+            </div>
+        </div>
+    </div>
+{% end block %}

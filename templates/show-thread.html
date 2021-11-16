@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 m-5">
+                <article>
+                    <h4>
+                    <a href="#">{{ thread.user.username }}</a> posted:
+                    {{ thread.title }}
+                    </h4>
+                    <p>
+                        <small>{{ thread.created_at.strftime("%d, %b %Y %H:%M") }}</small>
+                    </p>
+                    <p>
+                        {{ thread.body }}
+                    </p>
+                </article>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 m-5">
+                {% for reply in thread.replies %}
+                {% include "reply.html" %}
+                <hr>
+                {% end %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8 m-5">
+                {% if current_user %}
+                <form action="{{ reverse_url('reply', thread.channel.slug, thread.id) }} " method="POST">
+                {% module xsrf_form_html() %}
+                  <div class="form-group">
+                    <textarea required="required" rows="5" cols="" class="form-control" name="body" id="body" placeholder="Have something to say?"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary mt-2">Post</button>
+                </form>
+                {% else %}
+                <p>Please <a href="{{ reverse_url('login') }}next={{ url_escape(request.uri) }}">sign in</a> to participate in this discussion.</p>
+                {% end %}
+            </div>
+        </div>
+    </div>
+{% end %}

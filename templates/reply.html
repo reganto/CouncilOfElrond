@@ -1,0 +1,13 @@
+<element>
+	<div>
+		<div>
+			<p>
+				<a href="#" style="text-decoration: none;">
+					{{ reply.user.username.title() }}
+				</a>
+				said on: {{ reply.created_at.strftime('%d, %b %Y %H:%M') }} ...
+			</p>
+		</div>
+		<p>{{ reply.body }}</p>
+	</div>
+</element>
