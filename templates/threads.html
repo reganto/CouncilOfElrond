@@ -13,7 +13,7 @@
                     </h4>
                     <p>
                         <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
-                        <a href="#">{{ thread.user.username }}</a>
+                        <a href="#">{{ thread.user.username.capitalize() }}</a>
                     </p>
                     <p>
                       <a href="{{ reverse_url('tbelongstoc',

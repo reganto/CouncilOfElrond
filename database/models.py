@@ -3,13 +3,13 @@ from datetime import datetime
 import peewee
 from peewee_moves import DatabaseManager
 
-# db = peewee.PostgresqlDatabase(
-#    'testdb',
-#    user='testuser',
-#    password='testuser',
-#    host='localhost',
-# )
-db = peewee.SqliteDatabase(':memory:')
+db = peewee.PostgresqlDatabase(
+   'testdb',
+   user='testuser',
+   password='testuser',
+   host='localhost',
+)
+# db = peewee.SqliteDatabase(':memory:')
 # db = peewee.SqliteDatabase('database/db.sqlite3')
 
 

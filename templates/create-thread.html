@@ -10,7 +10,7 @@
         <div class="form-group">
           <label for="channel">Channel: </label>
           <select class="form-control" name="channel" id="channel" required="required">
-            {% from models import Channel %}
+            {% from database.models import Channel %}
             {% set channels = Channel.select() %}
             <option value="">Choose a Channel...</option>
             {% for channel in channels %}
