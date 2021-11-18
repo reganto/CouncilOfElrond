@@ -1,15 +1,15 @@
 class BaseFilter:
-    def __init__(self, request):
-        self.request = request
-        self.filters = []
+    def __init__(self, upcoming_filters):
+        self.upcoming_filters = upcoming_filters
+        self.expected_filters = []
 
-    def apply(self):
-        for fil_ter in self.filters:
-            if hasattr(self, fil_ter) and self.request.query_arguments.get(fil_ter): # noqa E501
-                filter_method = getattr(self, fil_ter)  # Thank's @MrFedora
+    def _apply(self):
+        for _filter in self.expected_filters:
+            if hasattr(self, _filter) and self.upcoming_filters.get(_filter): # noqa E501
+                filter_method = getattr(self, _filter)  # Thank's @MrFedora
                 result = filter_method(
-                    self.request.query_arguments[fil_ter][0].decode())
+                    self.upcoming_filters[_filter][0].decode())
         return result
 
     def done(self):
-        return self.apply()
+        return self._apply()

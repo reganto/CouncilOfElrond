@@ -56,7 +56,7 @@ class ThreadsTest(BaseTest):
         thread_in_channel.channel = channel
         thread_in_channel.save()
         thread_not_in_channel = Factory(Thread).create()
-        response = self.fetch(f'/threads/{channel.slug}')
+        response = self.fetch(f'/threads/?channel={channel.slug}')
         self.assertIn(thread_in_channel.title.encode(), response.body)
         self.assertNotIn(thread_not_in_channel.title.encode(), response.body)
 

@@ -25,7 +25,7 @@
                     {% set channels = Channel.select() %}
                     <div class="dropdown-menu">
                       {% for channel in channels %}
-                        <a href="{{ reverse_url('tbelongstoc', channel.slug) }}" class="dropdown-item">{{ channel.name }}</a>
+                        <a href="{{ reverse_url('threads') }}channel={{ channel.slug }}" class="dropdown-item">{{ channel.name }}</a>
                       {% end %}
                     </div>
                 </li>

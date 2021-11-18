@@ -1,5 +1,4 @@
-from filters.thread_filter import ThreadFilter
-from database.models import Channel, Thread, User, db
+from database.models import Thread, db
 from tornado.web import addslash, authenticated
 
 from views.base import BaseHandler
@@ -8,8 +7,8 @@ from views.base import BaseHandler
 class ThreadsHandler(BaseHandler):
     @addslash
     def get(self):
-        if self.request.query_arguments:
-            threads = ThreadFilter(self.request).done()
+        if self.request.query:
+            threads = Thread.filter(self.request.query_arguments)
         else:
             threads = Thread.select().order_by(Thread.created_at.desc())
         self.render('threads.html', threads=threads)
@@ -24,24 +23,6 @@ class ShowAThread(BaseHandler):
             self.write('Thread does not exist')
         else:
             self.render('show-thread.html', thread=thread)
-
-
-class ShowThreadsBelongsToAChannel(BaseHandler):
-    def get(self, channel_slug=None):
-        try:
-            threads = Thread.select().join(Channel).where(
-                Channel.slug == channel_slug).order_by(Thread.created_at.desc())  # noqa E50
-        except AttributeError:
-            print('Channel Does not exist!')
-        else:
-            self.render('threads.html', threads=threads)
-
-
-class ShowThreadsBelonsToAUsername(BaseHandler):
-    def get(self, username):
-        threads = Thread.select().join(User).where(
-            User.username == username).order_by(Thread.created_at.desc())
-        self.render('threads.html', threads=threads)
 
 
 class CreateAThread(BaseHandler):

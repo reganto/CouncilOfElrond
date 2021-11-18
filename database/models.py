@@ -3,6 +3,8 @@ from datetime import datetime
 import peewee
 from peewee_moves import DatabaseManager
 
+from filters.thread_filter import ThreadFilter
+
 db = peewee.PostgresqlDatabase(
    'testdb',
    user='testuser',
@@ -102,6 +104,10 @@ class Thread(BaseModel):
             user=reply.get('user'),
             body=reply.get('body'),
             )
+
+    @staticmethod
+    def filter(upcoming_filters):
+        return ThreadFilter(upcoming_filters).done()
 
     # class Meta:
     #     table_name = 'threads'

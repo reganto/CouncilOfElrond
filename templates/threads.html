@@ -16,8 +16,7 @@
                         <a href="#">{{ thread.user.username.capitalize() }}</a>
                     </p>
                     <p>
-                      <a href="{{ reverse_url('tbelongstoc',
-                      thread.channel.slug) }}"><small class="badge bg-info">{{ thread.channel.name }}</small></a>
+                      <a href="{{ reverse_url('threads') }}channel={{ thread.channel.slug }}"><small class="badge bg-info">{{ thread.channel.name }}</small></a>
                     </p>
                     <p>
                         {{ thread.body }}
