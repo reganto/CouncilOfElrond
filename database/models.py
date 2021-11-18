@@ -1,17 +1,18 @@
 from datetime import datetime
 
-import peewee
 from peewee_moves import DatabaseManager
+import peewee
 
 from filters.thread_filter import ThreadFilter
+from utils.humanize_datetime import humanize
 
-db = peewee.PostgresqlDatabase(
-   'testdb',
-   user='testuser',
-   password='testuser',
-   host='localhost',
-)
-# db = peewee.SqliteDatabase(':memory:')
+# db = peewee.PostgresqlDatabase(
+#     'testdb',
+#     user='testuser',
+#     password='testuser',
+#     host='localhost',
+# )
+db = peewee.SqliteDatabase(':memory:')
 # db = peewee.SqliteDatabase('database/db.sqlite3')
 
 
@@ -44,22 +45,16 @@ class User(BaseModel):
     def __str__(self):
         return self.username
 
-    # class Meta:
-    #     table_name = 'users'
-
 
 class Channel(BaseModel):
     name = peewee.CharField(
         index=True,
         max_length=255,
-        )
+    )
     slug = peewee.CharField()
 
     def __str__(self):
         return self.name
-
-    # class Meta:
-    #     table_name = 'channels'
 
 
 class Thread(BaseModel):
@@ -85,7 +80,7 @@ class Thread(BaseModel):
         on_delete='CASCADE',
         on_update='CASCADE',
         null=False,
-        )
+    )
 
     def __str__(self):
         return self.title
@@ -103,14 +98,15 @@ class Thread(BaseModel):
             thread=self.id,
             user=reply.get('user'),
             body=reply.get('body'),
-            )
+        )
 
     @staticmethod
     def filter(upcoming_filters):
         return ThreadFilter(upcoming_filters).done()
 
-    # class Meta:
-    #     table_name = 'threads'
+    @humanize
+    def diff_for_humans(self):
+        return self.created_at
 
 
 class Reply(BaseModel):
@@ -137,10 +133,3 @@ class Reply(BaseModel):
     @property
     def owner(self):
         return self.user.id
-
-    # class Meta:
-    #     table_name = 'replies'
-
-
-# db.create_tables([User, Thread, Reply, Channel], safe=True)
-# db.drop_tables([User, Thread, Reply, Channel, ])

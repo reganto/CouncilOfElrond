@@ -1,11 +1,9 @@
-<div>
-	<div>
-		<p>
-			<a href="#" style="text-decoration: none;">
-				{{ reply.user.username.title() }}
-			</a>
-			said on: {{ reply.created_at.strftime('%d, %b %Y %H:%M') }} ...
-		</p>
-	</div>
-	<p>{{ reply.body }}</p>
+<div class="card">
+	<p class="card-header">
+		<a href="#" style="text-decoration: none;">
+			{{ reply.user.username.capitalize() }}
+		</a>
+		said on: {{ reply.created_at.strftime('%d, %b %Y %H:%M') }} ...
+	</p>
+	<p class="card-body">{{ reply.body }}</p>
 </div>

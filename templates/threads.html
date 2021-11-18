@@ -1,33 +1,57 @@
 {% extends "base.html" %}
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-8 m-5">
-                <h1 class="mb-5">Forum Threads</h1>
-                {% if threads %}
-                {% for thread in threads %}
-                <article>
-                    <h4>
-                        <a href="{{ reverse_url('show-thread',
-                        thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
-                    </h4>
-                    <p>
-                        <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
-                        <a href="#">{{ thread.user.username.capitalize() }}</a>
-                    </p>
-                    <p>
-                      <a href="{{ reverse_url('threads') }}channel={{ thread.channel.slug }}"><small class="badge bg-info">{{ thread.channel.name }}</small></a>
-                    </p>
-                    <p>
-                        {{ thread.body }}
-                    </p>
-                </article>
-                <hr>
-                {% end %}
-                {% else %}
-                    <p>There is no thread yet. <a href="{{ reverse_url('createathread') }}">create One!</a></p>
-                {% end %}
+<div class="row">
+    <div class="col-8">
+        <h1 class="mb-5">Forum Threads</h1>
+        {% if threads %}
+        {% for thread in threads %}
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <a href="{{ reverse_url('show-thread',
+                            thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
+                </h4>
+                <p>
+                    <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
+                    <a href="#">{{ thread.user.username.capitalize() }}</a> 
+                    {% if thread.replies.count() >= 1 %}
+                    |
+                    <small>
+                        {{ thread.replies.count() }}
+                        comment{% if thread.replies.count() > 1 %}s{% end%}
+                    </small>
+                    {% end %}
+                </p>
+                <p>
+                    <a href="{{ reverse_url('threads') }}channel={{ thread.channel.slug }}"><small
+                            class="badge bg-info">{{
+                            thread.channel.name }}</small></a>
+                </p>
+            </div>
+            <div class="card-body">
+                <p>
+                    {{ thread.body }}
+                </p>
             </div>
         </div>
+        <br>
+        {% end %}
+        {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </symbol>
+        </svg>
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div>
+                There is no thread yet. <a class="alert-link" href="{{ reverse_url('createathread') }}">create One!</a>
+            </div>
+        </div>
+        {% end %}
     </div>
+</div>
 {% end block %}
