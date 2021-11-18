@@ -4,10 +4,10 @@ Created on Nov 6, 2021
 @author: reganto
 '''
 import peewee
+
 from app import Application
-from models import migrator
-from model_factory import Factory
-from models import User, Thread
+from database.model_factory import Factory
+from database.models import User, Thread, migrator
 from tests.base import BaseTest
 
 

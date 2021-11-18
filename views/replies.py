@@ -5,7 +5,7 @@ Created on Nov 6, 2021
 '''
 from views.base import BaseHandler
 from tornado.web import authenticated
-from models import Reply, db
+from database.models import Reply, db
 
 
 class AddAReply(BaseHandler):

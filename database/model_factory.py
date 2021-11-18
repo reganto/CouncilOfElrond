@@ -1,6 +1,6 @@
 from faker import Faker
 
-from models import User, Thread, Reply, Channel
+from database.models import User, Thread, Reply, Channel
 import peewee
 
 

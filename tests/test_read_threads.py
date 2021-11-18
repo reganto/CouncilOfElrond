@@ -1,7 +1,7 @@
 from app import Application
-from models import migrator, User, Thread, Reply, Channel
+from database.models import migrator, User, Thread, Reply, Channel
+from database.model_factory import Factory
 from tests.base import BaseTest
-from model_factory import Factory
 
 
 class ThreadsTest(BaseTest):

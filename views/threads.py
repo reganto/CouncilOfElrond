@@ -1,5 +1,5 @@
 from filters.thread_filter import ThreadFilter
-from models import Channel, Thread, User, db
+from database.models import Channel, Thread, User, db
 from tornado.web import addslash, authenticated
 
 from views.base import BaseHandler

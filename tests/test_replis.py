@@ -5,8 +5,8 @@ Created on Nov 6, 2021
 '''
 import peewee
 
-from model_factory import Factory
-from models import migrator, User, Reply
+from database.models import migrator, User, Reply
+from database.model_factory import Factory
 from tests.base import BaseTest
 from tornado.web import Application
 

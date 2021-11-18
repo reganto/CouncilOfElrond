@@ -1,5 +1,5 @@
 from filters.base import BaseFilter
-from models import User, Thread
+from database.models import User, Thread
 
 
 class ThreadFilter(BaseFilter):

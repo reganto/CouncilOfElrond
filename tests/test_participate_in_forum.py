@@ -4,8 +4,8 @@ Created on Nov 6, 2021
 @author: reganto
 '''
 from app import Application
-from models import migrator, Thread, User
-from model_factory import Factory
+from database.models import migrator, Thread, User
+from database.model_factory import Factory
 from tests.base import BaseTest
 
 

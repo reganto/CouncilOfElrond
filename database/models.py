@@ -10,8 +10,14 @@ from peewee_moves import DatabaseManager
 #    host='localhost',
 # )
 db = peewee.SqliteDatabase(':memory:')
+# db = peewee.SqliteDatabase('database/db.sqlite3')
 
-migrator = DatabaseManager(db)
+
+migrator = DatabaseManager(
+    db,
+    table_name='migration_history',
+    directory='database/migrations/'
+)
 
 
 class BaseModel(peewee.Model):

@@ -4,7 +4,7 @@ Created on Nov 7, 2021
 @author: reganto
 '''
 from views.base import BaseHandler
-from models import User
+from database.models import User
 from random import choice
 
 

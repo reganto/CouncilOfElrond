@@ -14,14 +14,14 @@
                     <div class="dropdown-menu">
                         <a href="{{ reverse_url('threads') }}" class="dropdown-item">All Threads</a>
                         {% if current_user %}
-                        {% from models import User %}
+                        {% from database.models import User %}
                         <a href="{{ reverse_url('threads') }}by={{ User.get_by_id(current_user) }}" class="dropdown-item">My Threads</a>
                         {% end %}
                     </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Channels</a>
-                    {% from models import Channel %}
+                    {% from database.models import Channel %}
                     {% set channels = Channel.select() %}
                     <div class="dropdown-menu">
                       {% for channel in channels %}

@@ -6,8 +6,8 @@ Created on Nov 6, 2021
 from tornado.web import Application
 
 from tests.base import BaseTest
-from models import migrator, Thread, Channel
-from model_factory import Factory
+from database.models import migrator, Thread, Channel
+from database.model_factory import Factory
 
 
 class ChannelTest(BaseTest):

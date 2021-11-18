@@ -140,6 +140,7 @@ cython_debug/
 # VSCode
 .vscode/
 
-database.db
-notes.txt
+# Database stuff
+database/db.sqlite3
 
+notes.txt
