@@ -13,11 +13,15 @@ class AuthHandler(BaseHandler):
         self.render('login.html')
 
     def post(self):
-        users = User.select()
-        users = [user for user in users]
-        user = choice(users)
-        self.set_secure_cookie('user', str(user.id))
-        self.redirect(self.get_argument('next', '/'))
+        try:
+            users = User.select()
+            users = [user for user in users]
+            user = choice(users)
+            self.set_secure_cookie('user', str(user.id))
+        except Exception:
+            self.write('User does not exist!')
+        else:
+            self.redirect(self.get_argument('next', '/'))
 
 
 class Logout(BaseHandler):

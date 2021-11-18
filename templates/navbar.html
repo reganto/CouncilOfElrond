@@ -9,30 +9,38 @@
                 <li class="nav-item">
                     <a href="{{ reverse_url('home') }}" class="nav-link">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ reverse_url('threads') }}" class="nav-link">Threads</a>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Browse</a>
+                    <div class="dropdown-menu">
+                        <a href="{{ reverse_url('threads') }}" class="dropdown-item">All Threads</a>
+                        {% if current_user %}
+                        {% from models import User %}
+                        <a href="{{ reverse_url('threads') }}by={{ User.get_by_id(current_user) }}" class="dropdown-item">My Threads</a>
+                        {% end %}
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Channels</a>
+                    {% from models import Channel %}
+                    {% set channels = Channel.select() %}
                     <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Inbox</a>
-                        <a href="#" class="dropdown-item">Drafts</a>
-                        <a href="#" class="dropdown-item">Sent Items</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#"class="dropdown-item">Trash</a>
+                      {% for channel in channels %}
+                        <a href="{{ reverse_url('tbelongstoc', channel.slug) }}" class="dropdown-item">{{ channel.name }}</a>
+                      {% end %}
                     </div>
                 </li>
             </ul>
             <ul class="nav navbar-nav ms-auto">
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Admin</a>
                   {% if current_user %}
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ User.get_by_id(current_user) }}</a>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a href="{{ reverse_url('threads') }}page=create" class="dropdown-item">New Thread</a>
+                        <a href="{{ reverse_url('createathread') }}" class="dropdown-item">New Thread</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ reverse_url('logout') }}" class="dropdown-item">Logout</a>
                     </div>
                   {% else %}
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Participate</a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a href="{{ reverse_url('login') }}" class="dropdown-item">Login</a>
                     </div>

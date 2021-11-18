@@ -18,6 +18,7 @@ class DevelopmentSettings(BaseSettings):
     cookie_secret = os.urandom(16)
     xsrf_cookie = True
     db = 'database.db'
+    login_url = '/auth/login/'
 
 
 class TestingSettings(BaseSettings):

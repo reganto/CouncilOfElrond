@@ -18,7 +18,7 @@ def _settings_to_dict(cls):
 class Application(tornado.web.Application):
     def __init__(self):
         routes = Routes
-        settings = _settings_to_dict(Settings.get('testing'))
+        settings = _settings_to_dict(Settings.get('development'))
         super().__init__(routes, **settings)
 
 

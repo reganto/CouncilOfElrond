@@ -1,23 +1,57 @@
-from tornado.web import addslash
+from filters.thread_filter import ThreadFilter
+from models import Channel, Thread, User, db
+from tornado.web import addslash, authenticated
+
 from views.base import BaseHandler
-from models import Thread, Channel
 
 
 class ThreadsHandler(BaseHandler):
     @addslash
     def get(self):
-        page = self.get_query_argument('page', None)
-        if page == 'create' and self.current_user:
-            self.render('create-thread.html')
-        try:
+        if self.request.query_arguments:
+            threads = ThreadFilter(self.request).done()
+        else:
             threads = Thread.select().order_by(Thread.created_at.desc())
+        self.render('threads.html', threads=threads)
+
+
+class ShowAThread(BaseHandler):
+    @addslash
+    def get(self, slug, thread_id):
+        try:
+            thread = Thread.get_by_id(thread_id)
         except Exception:
-            self.write('Threads does not exist!')
+            self.write('Thread does not exist')
+        else:
+            self.render('show-thread.html', thread=thread)
+
+
+class ShowThreadsBelongsToAChannel(BaseHandler):
+    def get(self, channel_slug=None):
+        try:
+            threads = Thread.select().join(Channel).where(
+                Channel.slug == channel_slug).order_by(Thread.created_at.desc())  # noqa E50
+        except AttributeError:
+            print('Channel Does not exist!')
         else:
             self.render('threads.html', threads=threads)
 
+
+class ShowThreadsBelonsToAUsername(BaseHandler):
+    def get(self, username):
+        threads = Thread.select().join(User).where(
+            User.username == username).order_by(Thread.created_at.desc())
+        self.render('threads.html', threads=threads)
+
+
+class CreateAThread(BaseHandler):
+    @addslash
+    @authenticated
+    def get(self):
+        self.render('create-thread.html')
+
     def post(self):
-        if not self.request.headers.get('Cookie'):
+        if not self.request.headers.get('Cookie'):  # NOTE: Just for testing
             return
         try:
             title = self.get_body_argument(
@@ -29,37 +63,14 @@ class ThreadsHandler(BaseHandler):
             if title is None or body is None or channel is None:
                 raise ValueError(
                     'ValueError: None value is not acceptable!')
-        except ValueError as e:
-            self.write(f'{e}')
-        else:
             thread = Thread.create(
                 title=title,
                 body=body,
                 channel=channel,
-                user=self.current_user,
-                )
-            self.redirect(thread.path)
-
-
-class SingleThreadHandler(BaseHandler):
-    @addslash
-    def get(self, slug, thread_id):
-        try:
-            thread = Thread.get(id=thread_id)
-        except Exception:
-            self.write('Thread does not exist')
+                user=int(self.current_user),
+            )
+        except ValueError as e:
+            self.write(f'{e}')
+            db.rollback()
         else:
-            self.render('show-thread.html', thread=thread)
-
-
-class ThreadsBelongsToAChannel(BaseHandler):
-    def get(self, channel_slug=None):
-        threads = None
-        if channel_slug:
-            try:
-                threads = Thread.select().join(Channel).where(
-                    Channel.slug == channel_slug).order_by(Thread.created_at.desc())  # noqa E501
-            except AttributeError:
-                print('Channel Does not exist!')
-            else:
-                self.render('threads.html', threads=threads)
+            self.redirect(thread.path)

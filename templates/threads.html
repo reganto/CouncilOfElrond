@@ -4,20 +4,29 @@
         <div class="row">
             <div class="col-8 m-5">
                 <h1 class="mb-5">Forum Threads</h1>
+                {% if threads %}
                 {% for thread in threads %}
                 <article>
                     <h4>
-                        <a href="{{ reverse_url('show-thread', thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
+                        <a href="{{ reverse_url('show-thread',
+                        thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
                     </h4>
                     <p>
                         <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
                         <a href="#">{{ thread.user.username }}</a>
                     </p>
                     <p>
+                      <a href="{{ reverse_url('tbelongstoc',
+                      thread.channel.slug) }}"><small class="badge bg-info">{{ thread.channel.name }}</small></a>
+                    </p>
+                    <p>
                         {{ thread.body }}
                     </p>
                 </article>
                 <hr>
+                {% end %}
+                {% else %}
+                    <p>There is no thread yet. <a href="{{ reverse_url('createathread') }}">create One!</a></p>
                 {% end %}
             </div>
         </div>

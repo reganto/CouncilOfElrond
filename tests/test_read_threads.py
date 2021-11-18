@@ -13,6 +13,10 @@ class ThreadsTest(BaseTest):
         migrator.upgrade()
         self.thread = Factory(Thread).create()
 
+    def tearDown(self):
+        super().tearDown()
+        migrator.downgrade()
+
     def test_a_user_can_view_all_threads(self):
         response = self.fetch('/threads/')
         self.assertIn(self.thread.title.encode(), response.body)
@@ -36,7 +40,7 @@ class ThreadsTest(BaseTest):
         self.thread.add_reply({
             'body': 'egg',
             'user': 1,
-            })
+        })
         self.assertIsNotNone(self.thread.replies)
 
     def test_a_thread_belongs_to_a_channel(self):
@@ -56,6 +60,18 @@ class ThreadsTest(BaseTest):
         self.assertIn(thread_in_channel.title.encode(), response.body)
         self.assertNotIn(thread_not_in_channel.title.encode(), response.body)
 
-    def tearDown(self):
-        super().tearDown()
-        migrator.downgrade()
+    def test_a_user_can_filter_threads_by_any_username(self):
+        user = Factory(User).create()
+        thread_by_user = Factory(Thread).create()
+        thread_by_user.user = user
+        thread_by_user.save()
+        thread_not_by_user = Factory(Thread).create()
+        response = self.fetch(
+            f'/threads/?by={user.username}',
+            headers={
+                'Cookie': self.be.headers['Set-Cookie'],
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        )
+        self.assertIn(thread_by_user.title.encode(), response.body)
+        self.assertNotIn(thread_not_by_user.title.encode(), response.body)

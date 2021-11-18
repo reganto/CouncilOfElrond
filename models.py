@@ -3,8 +3,13 @@ from datetime import datetime
 import peewee
 from peewee_moves import DatabaseManager
 
-db = peewee.SqliteDatabase('database.db')
-# db = peewee.SqliteDatabase(':memory:')
+# db = peewee.PostgresqlDatabase(
+#    'testdb',
+#    user='testuser',
+#    password='testuser',
+#    host='localhost',
+# )
+db = peewee.SqliteDatabase(':memory:')
 
 migrator = DatabaseManager(db)
 
@@ -31,6 +36,9 @@ class User(BaseModel):
     def __str__(self):
         return self.username
 
+    # class Meta:
+    #     table_name = 'users'
+
 
 class Channel(BaseModel):
     name = peewee.CharField(
@@ -41,6 +49,9 @@ class Channel(BaseModel):
 
     def __str__(self):
         return self.name
+
+    # class Meta:
+    #     table_name = 'channels'
 
 
 class Thread(BaseModel):
@@ -86,6 +97,9 @@ class Thread(BaseModel):
             body=reply.get('body'),
             )
 
+    # class Meta:
+    #     table_name = 'threads'
+
 
 class Reply(BaseModel):
     body = peewee.TextField()
@@ -111,3 +125,10 @@ class Reply(BaseModel):
     @property
     def owner(self):
         return self.user.id
+
+    # class Meta:
+    #     table_name = 'replies'
+
+
+# db.create_tables([User, Thread, Reply, Channel], safe=True)
+# db.drop_tables([User, Thread, Reply, Channel, ])
