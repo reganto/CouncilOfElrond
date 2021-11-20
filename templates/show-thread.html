@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="mt-5">
-            {% for reply in thread.replies %}
+            {% for reply in thread.replies.paginate(page=1, paginate_by=1) %}
             {% include "reply.html" %}
             <br>
             {% end %}
@@ -47,11 +47,13 @@
         <div class="mt-5">
             <div class="card">
                 <div class="card-header">
-                    Lorem Ipsum
+                    Thread Info
                 </div>
                 <div class="card-body">
                     <p>
-                        This thread was published {{ thread.diff_for_humans() }} ago.
+                        This thread was published {{ thread.diff_for_humans() }} ago by 
+                        <a href="#">{{ thread.user.username.capitalize() }}</a>, and currently has 
+                        {{ thread.replies.count() }} {% module str_plural('comment', thread.replies.count()) %}.
                     </p>
                 </div>
             </div>

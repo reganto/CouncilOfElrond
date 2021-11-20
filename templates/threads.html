@@ -13,14 +13,11 @@
                 </h4>
                 <p>
                     <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
-                    <a href="#">{{ thread.user.username.capitalize() }}</a> 
-                    {% if thread.replies.count() >= 1 %}
-                    |
+                    <a href="#">{{ thread.user.username.capitalize() }}</a>
                     <small>
                         {{ thread.replies.count() }}
-                        comment{% if thread.replies.count() > 1 %}s{% end%}
+                        {% module str_plural('comment', thread.replies.count()) %}
                     </small>
-                    {% end %}
                 </p>
                 <p>
                     <a href="{{ reverse_url('threads') }}channel={{ thread.channel.slug }}"><small

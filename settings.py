@@ -1,5 +1,7 @@
 import os
 
+from uimodules.str_plural import StrPlural
+
 root = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -19,6 +21,9 @@ class DevelopmentSettings(BaseSettings):
     xsrf_cookie = True
     db = 'database.db'
     login_url = '/auth/login/'
+    ui_modules = {
+        'str_plural': StrPlural,
+    }
 
 
 class TestingSettings(BaseSettings):
