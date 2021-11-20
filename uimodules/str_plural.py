@@ -8,3 +8,4 @@ class StrPlural(UIModule):
                 'uimodules/str_plural.html',
                 word=word+'s')
         return self.render_string('uimodules/str_plural.html', word=word)
+
