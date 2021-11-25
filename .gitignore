@@ -143,4 +143,7 @@ cython_debug/
 # Database stuff
 database/db.sqlite3
 
+# Eclipse pydev
+.project
+
 notes.txt
