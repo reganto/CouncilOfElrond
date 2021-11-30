@@ -145,5 +145,6 @@ database/db.sqlite3
 
 # Eclipse pydev
 .project
+.pydevproject
 
 notes.txt
