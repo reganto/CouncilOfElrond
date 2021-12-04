@@ -21,11 +21,34 @@
                 </article>
             </div>
         </div>
-        <div class="mt-5">
-            {% for reply in thread.replies.paginate(page=1, paginate_by=1) %}
-            {% include "reply.html" %}
-            <br>
+        <div class="mt-5" id="replies">
+            <div id="repage">
+                {% for reply in thread.replies.paginate(1, 7) %}
+                <div class="card repitems">
+                    <p class="card-header">
+                        <a href="#" style="text-decoration: none;">
+                            {{ reply.user.username.capitalize() }}
+                        </a>
+                        said on: <span>{{ reply.created_at.strftime('%d, %b %Y %H:%M') }}</span> ...
+                    </p>
+                    <p class="card-body">{{ reply.body }}</p>
+                </div>
+                {% end %}
+            </div>
+            
+            {% if thread.replies.count() > 7 %}
+            <div id="pagination">
+                <nav aria-label="...">
+                    <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#replies" onclick="sendFood(-1)">&laquo;</a></li>
+                            <li class="page-item"><a class="page-link" href="#replies" onclick="sendFood(1)">&raquo;</a></li>
+                    </ul>
+                </nav>
+            </div>
             {% end %}
+
+
+
         </div>
         <div class="mt-5">
             {% if current_user %}
@@ -51,8 +74,8 @@
                 </div>
                 <div class="card-body">
                     <p>
-                        This thread was published {{ thread.diff_for_humans() }} ago by 
-                        <a href="#">{{ thread.user.username.capitalize() }}</a>, and currently has 
+                        This thread was published {{ thread.diff_for_humans() }} ago by
+                        <a href="#">{{ thread.user.username.capitalize() }}</a>, and currently has
                         {{ thread.replies.count() }} {% module str_plural('comment', thread.replies.count()) %}.
                     </p>
                 </div>
@@ -60,4 +83,50 @@
         </div>
     </div>
 </div>
+{% end %}
+
+{% block footer %}
+<script>
+    function sendFood(state) {
+        var xHRObject = false;
+        var self = this;
+        self.xHRObject = new XMLHttpRequest();
+        self.xHRObject.open('POST', '/rp/', true);
+        self.xHRObject.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        self.xHRObject.onreadystatechange = function () {
+            if (self.xHRObject.readyState == 4) {
+                updatepage(self.xHRObject.responseText);
+            }
+        }
+        self.xHRObject.send('state=' + escape(state) + '&thread_id=' + `{{ thread.id }}`);
+    }
+
+    function updatepage(data) {
+        if (data == '')
+            return;
+        data = JSON.parse(data);
+        document.getElementById('repage').innerHTML = '';
+        reply_element = document.getElementById('repage');
+        for (const key in data) {
+            div = document.createElement('div');
+            div.setAttribute('class', 'card repitems');
+            first_p = document.createElement('p');
+            first_p.setAttribute('class', 'card-header');
+            inner_a = document.createElement('a');
+            inner_a.setAttribute('href', '#');
+            inner_a.setAttribute('style', 'text-decoration:none;');
+            inner_a.innerHTML = data[key]['user'];
+            first_p.appendChild(inner_a);
+            span = document.createElement('span');
+            span.innerHTML = ' said on: ' + data[key]['created_at'] + ' ...';
+            first_p.appendChild(span);
+            div.appendChild(first_p);
+            second_p = document.createElement('p');
+            second_p.setAttribute('class', 'card-body');
+            second_p.innerHTML = data[key]['body'];
+            div.appendChild(second_p)
+            reply_element.appendChild(div);
+        }
+    }
+</script>
 {% end %}
