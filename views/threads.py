@@ -22,6 +22,9 @@ class ShowAThread(BaseHandler):
         except Exception:
             self.write('Thread does not exist')
         else:
+            # reset replies pagination cookie
+            if self.get_cookie('current_reply_page_number'):
+                self.set_cookie('current_reply_page_number', '1'.encode())
             self.render('show-thread.html', thread=thread)
 
 
