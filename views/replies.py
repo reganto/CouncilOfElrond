@@ -36,14 +36,13 @@ class RepliesPagination(BaseHandler):
         state = self.get_body_argument('state')
         thread_id = self.get_body_argument('thread_id')
         thread = Thread.get_by_id(int(thread_id))
-        if self.get_cookie('current_reply_page_number'):
-            page_number = int(self.get_cookie('current_reply_page_number'))
-        else:
+        if self.get_cookie('current_reply_page_number') is None:
             self.set_cookie('current_reply_page_number', '1'.encode())
+        page_number = int(self.get_cookie('current_reply_page_number'))
         replies = ''
         if int(state) == 1:  # Next Page
             replies = thread.replies.paginate(page_number + 1, 7)
-            if len(replies) == 0:
+            if len(replies) == 0:  # if last page => there is no more next page
                 return
             number = int(self.get_cookie('current_reply_page_number'))
             number += 1
@@ -52,9 +51,9 @@ class RepliesPagination(BaseHandler):
                 str(number).encode())
         elif int(state) == -1:  # Prev Page
             number = int(self.get_cookie('current_reply_page_number'))
-            if number == 1:  # First page of replies
+            if number == 1:  # if first page => there is no more prev page
                 return
-            replies = thread.replies.paginate(page_number-1, 7)
+            replies = thread.replies.paginate(page_number - 1, 7)
             number -= 1
             self.set_cookie(
                 'current_reply_page_number',
