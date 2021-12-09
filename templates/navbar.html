@@ -16,6 +16,7 @@
                         {% if current_user %}
                         {% from database.models import User %}
                         <a href="{{ reverse_url('threads') }}by={{ User.get_by_id(current_user) }}" class="dropdown-item">My Threads</a>
+                        <a href="{{ reverse_url('threads') }}popular=1" class="dropdown-item">Popular Threads</a>
                         {% end %}
                     </div>
                 </li>

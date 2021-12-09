@@ -75,3 +75,26 @@ class ThreadsTest(BaseTest):
         )
         self.assertIn(thread_by_user.title.encode(), response.body)
         self.assertNotIn(thread_not_by_user.title.encode(), response.body)
+
+    def test_a_user_can_filter_threads_by_popularity(self):
+        thread_with_three_replies = Factory(Thread).create()
+        replies = Factory(Reply, 3).create()
+        for reply in replies:
+            reply.thread = thread_with_three_replies
+            reply.save()
+
+        thread_with_two_replies = Factory(Thread).create()
+        replies = Factory(Reply, 2).create()
+        for reply in replies:
+            reply.thread = thread_with_two_replies
+            reply.save()
+
+        thread_with_one_reply = self.thread
+        reply = Factory(Reply).create()
+        reply.thread = thread_with_one_reply
+        reply.save()
+
+        response = self.fetch('/threads/?popular=1')
+        self.assertIn('\n3\ncomments\n'.encode(), response.body)
+        self.assertIn('\n2\ncomments\n'.encode(), response.body)
+        self.assertIn('\n1\ncomment\n'.encode(), response.body)
