@@ -133,3 +133,44 @@ class Reply(BaseModel):
     @property
     def owner(self):
         return self.user.id
+
+    def add_favorite(self, favorite: dict):
+        return Favorite.create(
+            reply=self.id,
+            user=favorite.get('user'),
+            favorite_type=favorite.get('favorite_type'),
+        )
+
+
+class Favorite(BaseModel):
+    favorite_type = peewee.CharField(max_length=50)
+    created_at = peewee.DateTimeField(
+        default=datetime.now,
+    )
+    reply = peewee.ForeignKeyField(
+        Reply,
+        backref='favorites',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+    )
+    user = peewee.ForeignKeyField(
+        User,
+        backref='favorited',
+        on_delete='CASCADE',
+        on_update='CASCADE',
+    )
+
+    class Meta:
+        indexes = (
+            (('favorite_type', 'reply', 'user'), True),
+        )
+
+
+# db.create_tables(
+#     [
+#         User,
+#         Thread,
+#         Reply,
+#         Channel,
+#         Favorite,
+#     ], safe=True)
