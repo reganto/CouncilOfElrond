@@ -30,6 +30,20 @@
                             {{ reply.user.username.capitalize() }}
                         </a>
                         said on: <span>{{ reply.created_at.strftime('%d, %b %Y %H:%M') }}</span> ...
+                        {% if current_user %}
+                        <form method="post" action="/replies/{{reply.id }}/favorites/">
+                            <input type="hidden" name="pathname" value="{{request.uri}}" />
+                            <button 
+                              type="submit"
+                              class="btn btn-secondary"
+                              style="float: right;"
+                              {%if reply.is_favorited(current_user) %}disabled="disabled"{%end%}
+                              >
+                                {{ reply.favorites.count() }}
+                                {% module str_plural('Favorite', reply.favorites.count()) %}
+                            </button>
+                        </form>
+                        {% end %}
                     </p>
                     <p class="card-body">{{ reply.body }}</p>
                 </div>
@@ -128,5 +142,21 @@
             reply_element.appendChild(div);
         }
     }
+
+    //function favorite(reply_id) {
+    //    var xHRObject = false;
+    //    var self = this;
+    //    self.xHRObject = new XMLHttpRequest();
+    //    self.xHRObject.open('POST', `/replies/${reply_id}/favorites/`, true);
+    //    self.xHRObject.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    //    self.xHRObject.onreadystatechange = function () {
+    //        if (self.xHRObject.readyState == 4) {
+    //            document.getElementById('fav-num').innerHTML = self.xHRObject.response; 
+    //            //document.getElementById('fav-btn').disabled = true;
+    //    	console.log(self.xHRObject.response);
+    //        }
+    //    }
+    //    self.xHRObject.send();
+    //}
 </script>
 {% end %}

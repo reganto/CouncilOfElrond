@@ -1,7 +1,7 @@
 from tornado.web import authenticated
 
 from views.base import BaseHandler
-from database.models import Favorite, User
+from database.models import Favorite, User, Reply, db
 
 
 class RepliesFavorites(BaseHandler):
@@ -13,5 +13,8 @@ class RepliesFavorites(BaseHandler):
                 user=User.get_by_id(int(self.current_user.decode())),
                 reply=reply_id,
             )
-        except Exception:
-            self.write('Integrity Error occured due to unique constraint')
+            self.redirect(self.get_argument('pathname')) 
+        except Exception as e:
+            db.rollback()
+            self.write('You already favorite this reply!')
+

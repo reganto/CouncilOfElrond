@@ -6,13 +6,13 @@ import peewee
 from filters.thread_filter import ThreadFilter
 from utils.humanize_datetime import humanize
 
-# db = peewee.PostgresqlDatabase(
-#    'testdb',
-#    user='testuser',
-#    password='testuser',
-#    host='localhost',
-# )
-db = peewee.SqliteDatabase(':memory:')
+db = peewee.PostgresqlDatabase(
+   'testdb',
+   user='testuser',
+   password='testuser',
+   host='localhost',
+)
+# db = peewee.SqliteDatabase(':memory:')
 # db = peewee.SqliteDatabase('database/db.sqlite3')
 
 
@@ -141,6 +141,11 @@ class Reply(BaseModel):
             favorite_type=favorite.get('favorite_type'),
         )
 
+    def is_favorited(self, user_id):
+        if user_id is not None and isinstance(user_id, bytes):
+            user_id = int(user_id.decode())
+        return self.favorites.where(Favorite.user_id==user_id).exists()
+
 
 class Favorite(BaseModel):
     favorite_type = peewee.CharField(max_length=50)
@@ -165,6 +170,8 @@ class Favorite(BaseModel):
             (('favorite_type', 'reply', 'user'), True),
         )
 
+    def __str__(self):
+        return f'{self.favorite_type}<->{self.user}<->{self.reply}'
 
 # db.create_tables(
 #     [
