@@ -147,4 +147,7 @@ database/db.sqlite3
 .project
 .pydevproject
 
+# Poetry 
+pyproject.toml
+
 notes.txt
