@@ -6,13 +6,13 @@ import peewee
 from filters.thread_filter import ThreadFilter
 from utils.humanize_datetime import humanize
 
-db = peewee.PostgresqlDatabase(
-   'testdb',
-   user='testuser',
-   password='testuser',
-   host='localhost',
-)
-# db = peewee.SqliteDatabase(':memory:')
+#db = peewee.PostgresqlDatabase(
+#   'testdb',
+#   user='testuser',
+#   password='testuser',
+#   host='localhost',
+#)
+db = peewee.SqliteDatabase(':memory:')
 # db = peewee.SqliteDatabase('database/db.sqlite3')
 
 
@@ -41,6 +41,10 @@ class User(BaseModel):
     email = peewee.CharField(
         max_length=255,
     )
+
+    #created_at = peewee.DateTimeField(
+    #        default=datetime.now
+    #        )
 
     def __str__(self):
         return self.username
@@ -173,11 +177,11 @@ class Favorite(BaseModel):
     def __str__(self):
         return f'{self.favorite_type}<->{self.user}<->{self.reply}'
 
-# db.create_tables(
-#     [
-#         User,
-#         Thread,
-#         Reply,
-#         Channel,
-#         Favorite,
-#     ], safe=True)
+#db.create_tables(
+#    [
+#        User,
+#        Thread,
+#        Reply,
+#        Channel,
+#        Favorite,
+#    ], safe=True)

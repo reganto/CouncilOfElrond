@@ -4,6 +4,7 @@ class BaseFilter:
         self.expected_filters = []
 
     def _apply(self):
+        result = None
         for _filter in self.expected_filters:
             if hasattr(self, _filter) and self.upcoming_filters.get(_filter): # noqa E501
                 filter_method = getattr(self, _filter)  # Thank's @MrFedora 

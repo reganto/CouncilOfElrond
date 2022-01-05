@@ -26,7 +26,7 @@
                 {% for reply in thread.replies.paginate(1, 7) %}
                 <div class="card repitems">
                     <p class="card-header">
-                        <a href="#" style="text-decoration: none;">
+                    <a href="{{reverse_url('profiles', reply.user.username)}}" style="text-decoration: none;">
                             {{ reply.user.username.capitalize() }}
                         </a>
                         said on: <span>{{ reply.created_at.strftime('%d, %b %Y %H:%M') }}</span> ...

@@ -1,0 +1,42 @@
+{% extends "../base.html" %}
+
+{% block body %}
+  <div class="container">
+  <h3>
+      Hello {{ profile_user.username }} 
+  </h3>
+    <small class="text-info">{{ profile_user.email }}</small>
+    <div>
+        {% for thread in profile_user.threads.paginate(1, 2) %}
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <a href="{{ reverse_url('show-thread',
+                            thread.channel.slug, thread.id) }}">{{ thread.title }}</a>
+                </h4>
+                <p>
+                <small>{{ thread.diff_for_humans()   }} ago</small>|
+                    <a href="#">{{ thread.user.username.capitalize() }}</a> |
+                    <small>
+                        {{ thread.replies.count() }}
+                        {% module str_plural('comment', thread.replies.count()) %}
+                    </small>
+                </p>
+                <p>
+                    <a href="{{ reverse_url('threads') }}channel={{ thread.channel.slug }}"><small
+                            class="badge bg-info">{{
+                            thread.channel.name }}</small></a>
+                </p>
+            </div>
+            <div class="card-body">
+                <p>
+                    {{ thread.body }}
+                </p>
+            </div>
+        </div>
+        <br>
+
+        {% end %}
+    </div>
+  </div>
+{% end %}

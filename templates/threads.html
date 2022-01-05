@@ -13,7 +13,7 @@
                 </h4>
                 <p>
                     <small>{{ thread.created_at.strftime("%d, %b %Y") }}</small> |
-                    <a href="#">{{ thread.user.username.capitalize() }}</a> |
+                    <a href="{{ reverse_url('profiles', thread.user.username) }}">{{ thread.user.username.capitalize() }}</a> |
                     <small>
                         {{ thread.replies.count() }}
                         {% module str_plural('comment', thread.replies.count()) %}

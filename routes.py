@@ -12,4 +12,6 @@ routes = [
     url(r'/replies/([0-9]+)/favorites/?', views.RepliesFavorites, name='replies_favorites'),  # noqa E501
     url(r'/auth/login/?', views.AuthHandler, name='login'),
     url(r'/auth/logout/?', views.Logout, name='logout'),
+
+    url(r'/profiles/(\w+)/?', views.profilesHandler, name='profiles'),
 ]
