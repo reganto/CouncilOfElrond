@@ -34,9 +34,11 @@
             <ul class="nav navbar-nav ms-auto">
                 <li class="nav-item dropdown">
                   {% if current_user %}
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ User.get_by_id(current_user) }}</a>
+                    {% set user=User.get_by_id(current_user) %}
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ user }}</a>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a href="{{ reverse_url('createathread') }}" class="dropdown-item">New Thread</a>
+                        <a href="{{ reverse_url('profiles', user) }}" class="dropdown-item">My Profile</a>
                         <div class="dropdown-divider"></div>
                         <a href="{{ reverse_url('logout') }}" class="dropdown-item">Logout</a>
                     </div>

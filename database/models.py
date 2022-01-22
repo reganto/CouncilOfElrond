@@ -6,13 +6,13 @@ import peewee
 from filters.thread_filter import ThreadFilter
 from utils.humanize_datetime import humanize
 
-#db = peewee.PostgresqlDatabase(
-#   'testdb',
-#   user='testuser',
-#   password='testuser',
-#   host='localhost',
-#)
-db = peewee.SqliteDatabase(':memory:')
+db = peewee.PostgresqlDatabase(
+   'testdb',
+   user='testuser',
+   password='testuser',
+   host='localhost',
+)
+# db = peewee.SqliteDatabase(':memory:')
 # db = peewee.SqliteDatabase('database/db.sqlite3')
 
 
