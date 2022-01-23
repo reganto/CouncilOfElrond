@@ -1,13 +1,8 @@
-'''
-Created on Nov 6, 2021
-
-@author: reganto
-'''
 import peewee
 
 from app import Application
 from database.model_factory import Factory
-from database.models import User, Thread, migrator
+from database.models import User, Thread, Reply, migrator
 from tests.base import BaseTest
 
 
@@ -70,3 +65,42 @@ class ParticipateTest(BaseTest):
         with self.assertRaises(peewee.IntegrityError):
             self.thread.channel = None
             self.thread.save()
+
+    def test_an_authorized_user_can_delete_threads(self):
+        headers = self.login('/auth/login/')        
+        thread = Factory(Thread).create()
+        thread.user_id = headers.get('uid')
+        thread.save()
+        # What am I to make with replies assocaited with deleted thread? cascade delete?
+        reply = Factory(Reply).create()
+        reply.thread_id = thread
+        reply.save()
+        response = self.fetch(
+            f'/threads/{thread.channel}/{thread.id}/', 
+            method="DELETE", 
+            headers=headers
+            )
+
+        self.assertIs(response.code, 204)
+        self.assertNotIn(thread, Thread.select())
+        self.assertNotIn(reply, Reply.select())
+
+    def test_unauthorized_users_my_not_delete_threads(self):
+        thread = self.thread
+
+        # guest user
+        response = self.fetch(
+            f'/threads/{thread.channel}/{thread.id}/', 
+            method="DELETE"
+            )
+        self.assertEqual(response.code, 403)
+
+        # unauthorized user
+        headers = self.login('/auth/login/')
+        headers.pop('uid')
+        response = self.fetch(
+            f'/threads/{thread.channel}/{thread.id}/',
+            method="DELETE",
+            headers=headers,
+        )
+        self.assertEqual(response.code, 302)

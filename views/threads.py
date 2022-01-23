@@ -1,4 +1,4 @@
-from database.models import Thread, db
+from database.models import Thread, Reply, db
 from tornado.web import addslash, authenticated
 
 from views.base import BaseHandler
@@ -14,7 +14,13 @@ class ThreadsHandler(BaseHandler):
         self.render('threads.html', threads=threads)
 
 
-class ShowAThread(BaseHandler):
+class ThreadsManager(BaseHandler):
+    """Threads manager. [get, post, delete, update] threads
+
+    :param BaseHandler: Base handler for our route handler classes
+    :type BaseHandler: tornado.web.RequestHandler
+    :raises ValueError: [description]
+    """
     @addslash
     def get(self, slug, thread_id):
         try:
@@ -26,6 +32,39 @@ class ShowAThread(BaseHandler):
             if self.get_cookie('current_reply_page_number'):
                 self.set_cookie('current_reply_page_number', '1'.encode())
             self.render('show-thread.html', thread=thread)
+
+
+    @addslash
+    @authenticated  # unauthenticated user
+    def delete(self, slug: str, thread_id: int):
+        """Delete a thread
+
+        :param slug: slug of thread's channel
+        :type slug: str
+        :param thread_id: simply thread's id
+        :type thread_id: int
+        :raises ValueError: [description]
+        """
+
+        # unauthorized user
+        # TODO: can we abstract user authorization to single authorize function?
+        self.current_user = int(self.request.headers.get('Uid', 0))
+        thread = Thread.get_by_id(thread_id)
+        if thread.user_id != self.current_user:
+            self.set_status(302)
+            return
+
+        
+        replies = Reply.select().join(Thread) \
+            .where(Thread.id==thread_id)
+        # TODO: can we delete all replies in one transaction?
+        # TODO: can we abstract thread deletion in a single Thread delete method?
+        for reply in replies:
+            reply.delete().execute()
+        
+        thread.delete().where(Thread.id==thread_id).execute()
+        self.set_status(204)
+
 
 
 class CreateAThread(BaseHandler):

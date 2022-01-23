@@ -17,6 +17,7 @@ class AuthHandler(BaseHandler):
             users = User.select()
             users = [user for user in users]
             user = choice(users)
+            self.set_header('uid', user.id)
             self.set_secure_cookie('user', str(user.id))
         except Exception:
             self.write('User does not exist!')
