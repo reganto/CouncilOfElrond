@@ -12,8 +12,8 @@ from utils.humanize_datetime import humanize
 #    password='testuser',
 #    host='localhost',
 # )
-db = peewee.SqliteDatabase(':memory:')
-# db = peewee.SqliteDatabase('database/db.sqlite3')
+# db = peewee.SqliteDatabase(':memory:')
+db = peewee.SqliteDatabase('database/db.sqlite3')
 
 
 migrator = DatabaseManager(

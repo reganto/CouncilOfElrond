@@ -33,7 +33,6 @@ class ThreadsManager(BaseHandler):
                 self.set_cookie('current_reply_page_number', '1'.encode())
             self.render('show-thread.html', thread=thread)
 
-
     @addslash
     @authenticated  # unauthenticated user
     def delete(self, slug: str, thread_id: int):
@@ -47,24 +46,23 @@ class ThreadsManager(BaseHandler):
         """
 
         # unauthorized user
-        # TODO: can we abstract user authorization to single authorize function?
+        # TODO: can we abstract user authorization
+        # to single authorize function?
         self.current_user = int(self.request.headers.get('Uid', 0))
         thread = Thread.get_by_id(thread_id)
         if thread.user_id != self.current_user:
             self.set_status(302)
             return
 
-        
         replies = Reply.select().join(Thread) \
-            .where(Thread.id==thread_id)
+            .where(Thread.id == thread_id)
         # TODO: can we delete all replies in one transaction?
-        # TODO: can we abstract thread deletion in a single Thread delete method?
+        # TODO: can we abstract thread deletion in a single
+        # Thread delete method?
         for reply in replies:
             reply.delete().execute()
-        
-        thread.delete().where(Thread.id==thread_id).execute()
+        thread.delete().where(Thread.id == thread_id).execute()
         self.set_status(204)
-
 
 
 class CreateAThread(BaseHandler):
@@ -77,23 +75,18 @@ class CreateAThread(BaseHandler):
         if not self.request.headers.get('Cookie'):  # NOTE: Just for testing
             return
         try:
-            title = self.get_body_argument(
-                'title') if self.get_body_argument('title') != '' else None
-            body = self.get_body_argument(
-                'body') if self.get_body_argument('body') != '' else None
-            channel = self.get_body_argument(
-                'channel') if self.get_body_argument('channel') != '' else None
-            if title is None or body is None or channel is None:
-                raise ValueError(
-                    'ValueError: None value is not acceptable!')
+            title = self.get_body_argument('title')
+            body = self.get_body_argument('body')
+            channel = self.get_argument('channel')
+        except ValueError as e:
+            self.write('An Error occured. please try again.')
+            print('Error: ', e)
+            db.rollback()
+        else:
             thread = Thread.create(
                 title=title,
                 body=body,
                 channel=channel,
                 user=int(self.current_user),
             )
-        except ValueError as e:
-            self.write(f'{e}')
-            db.rollback()
-        else:
             self.redirect(thread.path)
