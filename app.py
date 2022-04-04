@@ -10,7 +10,7 @@ def _settings_to_dict(cls):
     class_attributes_dict = vars(cls)
     result_dict = {}
     for key, value in class_attributes_dict.items():
-        if not key.startswith('__'):
+        if not key.startswith("__"):
             result_dict[key] = value
     return result_dict
 
@@ -18,11 +18,11 @@ def _settings_to_dict(cls):
 class Application(tornado.web.Application):
     def __init__(self):
         routes = Routes
-        settings = _settings_to_dict(Settings.get('development'))
+        settings = _settings_to_dict(Settings.get("development"))
         super().__init__(routes, **settings)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parse_command_line()
-    Application().listen(8001)
+    Application().listen(8000)
     tornado.ioloop.IOLoop.current().start()

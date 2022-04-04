@@ -1,12 +1,10 @@
-import os
+from pathlib import Path
+import secrets
 
-from uimodules.str_plural import StrPlural
-
-root = os.path.dirname(os.path.abspath(__file__))
+from uimodules.pluralize import Pluralize
 
 
-def add_path(*args):
-    return os.path.join(root, *args)
+BASE_DIR = Path(__file__).resolve().parent
 
 
 class BaseSettings:
@@ -16,22 +14,22 @@ class BaseSettings:
 class DevelopmentSettings(BaseSettings):
     development = True
     debug = True
-    template_path = add_path('templates')
-    cookie_secret = os.urandom(16)
+    template_path = BASE_DIR / "templates"
+    cookie_secret = secrets.token_hex()
     xsrf_cookie = True
-    db = 'database.db'
-    login_url = '/auth/login/'
+    db = "database.db"
+    login_url = "/auth/login/"
     ui_modules = {
-        'str_plural': StrPlural,
+        "str_plural": Pluralize,
     }
 
 
 class TestingSettings(BaseSettings):
     testing = True
-    db = ':memory:'
+    db = ":memory:"
     debug = True
-    template_path = add_path('templates')
-    cookie_secret = os.urandom(16)
+    template_path = BASE_DIR / "templates"
+    cookie_secret = secrets.token_hex()
     xsrf_cookie = True
 
 
@@ -40,7 +38,7 @@ class ProductionSettings(BaseSettings):
 
 
 settings = {
-    'development': DevelopmentSettings,
-    'testing': TestingSettings,
-    'production': ProductionSettings,
+    "development": DevelopmentSettings,
+    "testing": TestingSettings,
+    "production": ProductionSettings,
 }
