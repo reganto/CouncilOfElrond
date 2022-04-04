@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "forum"
+version = "0.1.0"
+description = "A (Tornado, Peewee) Forum"
+authors = ["Reganto <rreganto@gmail.com>"]
+license = "Apache License Version 2.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+tornado = "^6.1"
+peewee-moves = "^2.1.0"
+pendulum = "^2.1.2"
+psycopg2-binary = "^2.9.2"
+
+[tool.poetry.dev-dependencies]
+Faker = "^10.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

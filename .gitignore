@@ -143,11 +143,4 @@ cython_debug/
 # Database stuff
 database/db.sqlite3
 
-# Eclipse pydev
-.project
-.pydevproject
-
-# Poetry 
-pyproject.toml
-
 notes.txt
