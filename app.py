@@ -1,28 +1,20 @@
 import tornado.web
 import tornado.ioloop
-from tornado.options import parse_command_line
+from tornado.options import parse_command_line, options, define
 
 from routes import routes as Routes
-from settings import settings as Settings
+from settings import SETTINGS
 
-
-def _settings_to_dict(cls):
-    class_attributes_dict = vars(cls)
-    result_dict = {}
-    for key, value in class_attributes_dict.items():
-        if not key.startswith("__"):
-            result_dict[key] = value
-    return result_dict
+define("port", default=8000, type=int, help="run on the given port")
 
 
 class Application(tornado.web.Application):
     def __init__(self):
-        routes = Routes
-        settings = _settings_to_dict(Settings.get("development"))
-        super().__init__(routes, **settings)
+        super().__init__(Routes, **SETTINGS)
 
 
 if __name__ == "__main__":
     parse_command_line()
-    Application().listen(8000)
+    Application().listen(options.port)
     tornado.ioloop.IOLoop.current().start()
+
