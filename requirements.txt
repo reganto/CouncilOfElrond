@@ -1,22 +1,28 @@
 appdirs==1.4.4
-click==8.0.3
-Faker==9.8.0
-jedi==0.18.0
-parso==0.8.2
-peewee==3.14.8
+black==22.3.0
+click==8.0.4
+Faker==13.3.2
+flake8==4.0.1
+jedi==0.18.1
+mccabe==0.6.1
+mypy-extensions==0.4.3
+parso==0.8.3
+pathspec==0.9.0
+peewee==3.14.10
 peewee-moves==2.1.0
-prompt-toolkit==3.0.21
-Pygments==2.10.0
+pendulum==2.1.2
+platformdirs==2.5.1
+prompt-toolkit==3.0.26
+ptpython==3.0.20
+pycodestyle==2.8.0
+pyflakes==2.4.0
+Pygments==2.11.2
 python-dateutil==2.8.2
-pytz==2021.3
+python-decouple==3.6
+pytzdata==2020.1
 six==1.16.0
-text-unidecode==1.3
+toml==0.10.2
+tomli==2.0.1
 tornado==6.1
+typing_extensions==4.1.1
 wcwidth==0.2.5
-coverage==6.1.1
-psycopg2==2.9.1
-pendulum==2.1.1
-
-# DEV
-# flake8==4.0.1
-# ptpython==3.0.20
